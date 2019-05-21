@@ -4,6 +4,7 @@ import lombok.Getter;
 import me.codalot.core.files.ResourceFile;
 import me.codalot.core.managers.Manager;
 import me.codalot.jump.JumpCraft;
+import me.codalot.jump.objects.Modifier;
 
 @Getter
 public class SettingsManager implements Manager {
@@ -13,7 +14,8 @@ public class SettingsManager implements Manager {
 
     private boolean doubleJumpEnabled;
     private int doubleJumpLimit;
-    private double doubleJumpStrength;
+    private Modifier doubleJumpStrengthHorizontal;
+    private Modifier doubleJumpStrengthVertical;
 
     public SettingsManager(JumpCraft plugin, String file) {
         this.plugin = plugin;
@@ -26,7 +28,8 @@ public class SettingsManager implements Manager {
 
         doubleJumpEnabled = file.getBoolean("double-jump.enabled");
         doubleJumpLimit = file.getInt("double-jump.limit");
-        doubleJumpStrength = file.getInt("double-jump.strength");
+        doubleJumpStrengthHorizontal = new Modifier(file.getString("double-jump.strength.horizontal"));
+        doubleJumpStrengthVertical = new Modifier(file.getString("double-jump.strength.vertical"));
     }
 
     @Override
