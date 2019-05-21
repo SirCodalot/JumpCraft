@@ -19,7 +19,7 @@ public class Modifier {
             value = Double.parseDouble(serialized);
         } else {
             this.type = type;
-            value = Double.parseDouble(serialized.substring(1, serialized.length()));
+            value = Double.parseDouble(serialized.substring(1));
         }
 
         System.out.println(this.type.toString() + " " + value);
