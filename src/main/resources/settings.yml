@@ -1,0 +1,4 @@
+double-jump:
+  enabled: true
+  limit: 1
+  strength: 0.2
