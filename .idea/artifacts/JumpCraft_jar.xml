@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="JumpCraft:jar">
-    <output-path>D:/Minecraft Servers/Spigot 1.14/plugins</output-path>
+    <output-path>$USER_HOME$/Desktop/Server/1.14/plugins</output-path>
     <root id="archive" name="JumpCraft.jar">
       <element id="module-output" name="JumpCraft" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/me/codalot/core/Core/1.0-SNAPSHOT/Core-1.0-SNAPSHOT.jar" path-in-jar="/" />

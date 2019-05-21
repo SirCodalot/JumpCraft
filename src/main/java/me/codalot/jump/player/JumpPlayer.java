@@ -34,6 +34,9 @@ public class JumpPlayer extends CPlayer {
     }
 
     private void update() {
+        if (getPlayer() == null)
+            return;
+
         updateState();
 
         previousLocation = getPlayer().getLocation();

@@ -5,16 +5,24 @@ import lombok.Getter;
 @Getter
 public enum ModifierType {
 
-    SET("S"),
-    ADD("a"),
-    SUBTRACT("s"),
-    MULTIPLY("m"),
-    DIVIDE("d");
+    SET("="),
+    ADD("+"),
+    SUBTRACT("-"),
+    MULTIPLY("*", "x"),
+    DIVIDE("/", ":");
 
-    private String id;
+    private String[] ids;
 
-    ModifierType(String id) {
-        this.id = id;
+    ModifierType(String... ids) {
+        this.ids = ids;
+    }
+
+    private boolean isId(String string) {
+        for (String id : ids) {
+            if (string.equalsIgnoreCase(id))
+                return true;
+        }
+        return false;
     }
 
     public double apply(double c, double v) {
@@ -35,9 +43,9 @@ public enum ModifierType {
 
     public static ModifierType get(String id) {
         for (ModifierType type : values()) {
-            if (type.getId().equals(id))
+            if (type.isId(id))
                 return type;
         }
-        return SET;
+        return null;
     }
 }

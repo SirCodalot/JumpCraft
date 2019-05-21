@@ -10,15 +10,19 @@ public class Modifier {
     private double value;
 
     public Modifier(String serialized) {
+
         String[] split = serialized.split(":");
 
-        if (split.length == 1) {
-            type = ModifierType.SET;
-            value = Double.parseDouble(split[0]);
+        ModifierType type = ModifierType.get(serialized.substring(0, 1));
+        if (type == null) {
+            this.type = ModifierType.SET;
+            value = Double.parseDouble(serialized);
         } else {
-            type = ModifierType.get(split[0]);
-            value = Double.parseDouble(split[1]);
+            this.type = type;
+            value = Double.parseDouble(serialized.substring(1, serialized.length()));
         }
+
+        System.out.println(this.type.toString() + " " + value);
     }
 
     public Modifier(ModifierType type, double value) {

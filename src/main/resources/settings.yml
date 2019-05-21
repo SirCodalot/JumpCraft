@@ -2,5 +2,5 @@ double-jump:
   enabled: true
   limit: 1
   strength:
-    horizontal: m:1.2
-    vertical: S:0.35
+    horizontal: x1.2
+    vertical: 0.35
