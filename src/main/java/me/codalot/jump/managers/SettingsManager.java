@@ -6,6 +6,8 @@ import me.codalot.core.managers.Manager;
 import me.codalot.jump.JumpCraft;
 import me.codalot.jump.objects.Modifier;
 
+import java.util.List;
+
 @Getter
 public class SettingsManager implements Manager {
 
@@ -16,6 +18,11 @@ public class SettingsManager implements Manager {
     private int doubleJumpLimit;
     private Modifier doubleJumpStrengthHorizontal;
     private Modifier doubleJumpStrengthVertical;
+
+    private boolean wallClimbEnabled;
+    private double wallClimbLimit;
+    private double wallClimbSpeed;
+    private List<String> wallClimbAllowedBlocks;
 
     public SettingsManager(JumpCraft plugin, String file) {
         this.plugin = plugin;
@@ -30,6 +37,11 @@ public class SettingsManager implements Manager {
         doubleJumpLimit = file.getInt("double-jump.limit");
         doubleJumpStrengthHorizontal = new Modifier(file.getString("double-jump.strength.horizontal"));
         doubleJumpStrengthVertical = new Modifier(file.getString("double-jump.strength.vertical"));
+
+        wallClimbEnabled = file.getBoolean("wall-climb.enabled");
+        wallClimbLimit = file.getDouble("wall-climb.limit");
+        wallClimbSpeed = file.getDouble("wall-climb.speed");
+        wallClimbAllowedBlocks = file.getStringList("wall-climb.allowed-blocks");
     }
 
     @Override

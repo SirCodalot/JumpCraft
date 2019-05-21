@@ -4,3 +4,10 @@ double-jump:
   strength:
     horizontal: x1.2
     vertical: 0.35
+
+wall-climb:
+  enabled: true
+  limit: 3
+  speed: 1.5
+  allowed-blocks:
+    - COBBLESTONE
