@@ -5,6 +5,7 @@ import me.codalot.core.listeners.types.CPlayerListener;
 import me.codalot.core.managers.types.ListenerManager;
 import me.codalot.core.managers.types.PlayerManager;
 import me.codalot.jump.listener.StateListener;
+import me.codalot.jump.managers.SettingsManager;
 import me.codalot.jump.player.JumpPlayer;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class JumpCraft extends CodalotPlugin {
     public void onEnable() {
         managers = new ArrayList<>();
 
+        managers.add(new SettingsManager(this, "settings"));
         managers.add(new PlayerManager<>(this, JumpPlayer.class));
         managers.add(new ListenerManager(this,
                 new CPlayerListener(this),
@@ -22,5 +24,9 @@ public class JumpCraft extends CodalotPlugin {
         ));
 
         super.onEnable();
+    }
+
+    public static SettingsManager getSettings() {
+        return getInstance().getManager(SettingsManager.class);
     }
 }
