@@ -10,9 +10,6 @@ public class Modifier {
     private double value;
 
     public Modifier(String serialized) {
-
-        String[] split = serialized.split(":");
-
         ModifierType type = ModifierType.get(serialized.substring(0, 1));
         if (type == null) {
             this.type = ModifierType.SET;
@@ -21,8 +18,6 @@ public class Modifier {
             this.type = type;
             value = Double.parseDouble(serialized.substring(1));
         }
-
-        System.out.println(this.type.toString() + " " + value);
     }
 
     public Modifier(ModifierType type, double value) {
