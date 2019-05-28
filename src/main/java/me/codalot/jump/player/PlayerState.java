@@ -8,6 +8,7 @@ public enum PlayerState {
     SNEAK,
     CRAWL,
     DOUBLE_JUMP,
+    CLIMB,
     FLY,
     FALL;
 

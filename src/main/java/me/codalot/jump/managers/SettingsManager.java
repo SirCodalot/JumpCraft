@@ -21,7 +21,8 @@ public class SettingsManager implements Manager {
 
     private boolean wallClimbEnabled;
     private double wallClimbLimit;
-    private double wallClimbSpeed;
+    private Modifier wallClimbSpeedHorizontal;
+    private Modifier wallClimbSpeedVertical;
     private List<String> wallClimbAllowedBlocks;
 
     public SettingsManager(JumpCraft plugin, String file) {
@@ -40,7 +41,8 @@ public class SettingsManager implements Manager {
 
         wallClimbEnabled = file.getBoolean("wall-climb.enabled");
         wallClimbLimit = file.getDouble("wall-climb.limit");
-        wallClimbSpeed = file.getDouble("wall-climb.speed");
+        wallClimbSpeedHorizontal = new Modifier(file.getString("wall-climb.speed.horizontal"));
+        wallClimbSpeedVertical = new Modifier(file.getString("wall-climb.speed.vertical"));
         wallClimbAllowedBlocks = file.getStringList("wall-climb.allowed-blocks");
     }
 
