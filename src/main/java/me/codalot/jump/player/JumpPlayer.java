@@ -10,6 +10,7 @@ import me.codalot.jump.managers.SettingsManager;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.UUID;
@@ -22,13 +23,20 @@ public class JumpPlayer extends CPlayer {
     private Location previousLocation;
 
     private int airJumps;
+    private int blocksClimbed;
+
+    private boolean climbLock;
 
     public JumpPlayer(UUID uuid, YamlFile file) {
         super(uuid, file);
 
         state = PlayerState.IDLE;
         previousLocation = getPlayer().getLocation();
+
         airJumps = 0;
+        blocksClimbed = 0;
+
+        climbLock = false;
 
         Bukkit.getScheduler().runTaskTimer(JumpCraft.getInstance(), this::update, 10, 1); // TODO use one runnable for all players
     }
@@ -39,12 +47,21 @@ public class JumpPlayer extends CPlayer {
 
         updateState();
 
-        previousLocation = getPlayer().getLocation();
-
         if (getPlayer().isOnGround()) {
             airJumps = 0;
+            climbLock = false;
             getPlayer().setAllowFlight(true);
         }
+
+        if (state == PlayerState.CLIMB) {
+            getPlayer().setGravity(false);
+            climb();
+        } else {
+            blocksClimbed = 0;
+            getPlayer().setGravity(true);
+        }
+
+        previousLocation = getPlayer().getLocation();
 
         getPlayer().sendTitle("", state.toString().toLowerCase(), 0, 30, 0);
     }
@@ -60,6 +77,9 @@ public class JumpPlayer extends CPlayer {
     private PlayerState getNewState() {
         if (getPlayer().isFlying())
             return PlayerState.FLY;
+
+        if (canClimb())
+            return PlayerState.CLIMB;
 
         if (!getPlayer().isOnGround())
             return PlayerState.FALL;
@@ -96,5 +116,39 @@ public class JumpPlayer extends CPlayer {
 
         if (airJumps == settings.getDoubleJumpLimit())
             getPlayer().setAllowFlight(false);
+    }
+
+    private void climb() {
+        SettingsManager settings = JumpCraft.getSettings();
+
+        Vector velocity = getPlayer().getVelocity();
+        Vector direction = getPlayer().getLocation().toVector().subtract(previousLocation.toVector()).setY(0);
+
+        velocity.setY(getPlayer().isSneaking() ? 0 : settings.getWallClimbSpeedVertical().modify(velocity.getY()));
+        velocity.setX(settings.getWallClimbSpeedHorizontal().modify(direction.getX()));
+        velocity.setZ(settings.getWallClimbSpeedHorizontal().modify(direction.getZ()));
+
+        if (getPlayer().getEyeLocation().getPitch() > 85)
+            velocity.setY(-velocity.getY());
+
+        getPlayer().setVelocity(velocity);
+
+        if (previousLocation.getBlockY() != getPlayer().getLocation().getBlockY())
+            blocksClimbed++;
+
+        if (blocksClimbed > settings.getWallClimbLimit())
+            climbLock = true;
+    }
+
+    private boolean canClimb() {
+        if (climbLock)
+            return false;
+
+        Location location = getPlayer().getLocation().clone();
+        Vector direction = getPlayer().getEyeLocation().getDirection().clone().setY(0);
+
+        Location blockLocation = location.clone().add(direction.normalize().multiply(0.43));
+
+        return JumpCraft.getSettings().getWallClimbAllowedBlocks().contains(blockLocation.getBlock().getType().toString());
     }
 }
