@@ -118,6 +118,9 @@ public class JumpPlayer extends CPlayer {
         velocity.setX(settings.getWallClimbSpeedHorizontal().modify(direction.getX()));
         velocity.setZ(settings.getWallClimbSpeedHorizontal().modify(direction.getZ()));
 
+        if (getPlayer().getEyeLocation().getPitch() > 85)
+            velocity.setY(-velocity.getY());
+
         getPlayer().setVelocity(velocity);
     }
 
