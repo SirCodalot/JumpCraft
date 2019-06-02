@@ -23,13 +23,20 @@ public class JumpPlayer extends CPlayer {
     private Location previousLocation;
 
     private int airJumps;
+    private int blocksClimbed;
+
+    private boolean climbLock;
 
     public JumpPlayer(UUID uuid, YamlFile file) {
         super(uuid, file);
 
         state = PlayerState.IDLE;
         previousLocation = getPlayer().getLocation();
+
         airJumps = 0;
+        blocksClimbed = 0;
+
+        climbLock = false;
 
         Bukkit.getScheduler().runTaskTimer(JumpCraft.getInstance(), this::update, 10, 1); // TODO use one runnable for all players
     }
@@ -42,14 +49,17 @@ public class JumpPlayer extends CPlayer {
 
         if (getPlayer().isOnGround()) {
             airJumps = 0;
+            climbLock = false;
             getPlayer().setAllowFlight(true);
         }
 
         if (state == PlayerState.CLIMB) {
             getPlayer().setGravity(false);
             climb();
-        } else
+        } else {
+            blocksClimbed = 0;
             getPlayer().setGravity(true);
+        }
 
         previousLocation = getPlayer().getLocation();
 
@@ -122,9 +132,18 @@ public class JumpPlayer extends CPlayer {
             velocity.setY(-velocity.getY());
 
         getPlayer().setVelocity(velocity);
+
+        if (previousLocation.getBlockY() != getPlayer().getLocation().getBlockY())
+            blocksClimbed++;
+
+        if (blocksClimbed > settings.getWallClimbLimit())
+            climbLock = true;
     }
 
     private boolean canClimb() {
+        if (climbLock)
+            return false;
+
         Location location = getPlayer().getLocation().clone();
         Vector direction = getPlayer().getEyeLocation().getDirection().clone().setY(0);
 
